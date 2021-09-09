@@ -18,8 +18,9 @@
 <svelte:window on:resize={checkMedia} />
 
 <footer>
-	{#if mobile}<p>Mobile</p>{/if}
-	<a href="#">Designed and Built by Timothy Allgood</a>
+	<a href="https://github.com/TimothyAllgood/portfolio" target="_blank">
+		Designed and Built by Timothy Allgood using Svelte.
+	</a>
 </footer>
 
 <style>

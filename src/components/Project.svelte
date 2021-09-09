@@ -1,12 +1,15 @@
 <script>
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
-
+	import { cubicInOut } from 'svelte/easing';
 	export let orientation;
 	export let img;
 	export let tech;
 	export let title;
 	export let description;
+	export let link;
+	export let github;
+	let component;
 	let visible = false;
 	onMount(() => {
 		let observer = new IntersectionObserver(
@@ -22,19 +25,31 @@
 			},
 			{ rootMargin: '0px 0px -200px 0px' }
 		);
-		document.querySelectorAll('.project').forEach((project) => {
-			observer.observe(project);
-		});
+		observer.observe(component);
+		// component.
+		// document.querySelectorAll('.project').forEach((project) => {
+		// 	observer.observe(project);
+		// });
 	});
 </script>
 
-<section class={`project ${orientation}`}>
+<section class={`project ${orientation}`} bind:this={component}>
 	{#if visible}
-		<div class="image" transition:fly={{ y: 200, duration: 1000 }}>
+		<div
+			class="image"
+			transition:fly={{ y: 200, duration: 1000, easing: cubicInOut }}
+			on:click={() => window.open(link, '_blank').focus()}
+		>
 			<img src={img} alt="" />
 		</div>
-		<div class="info" transition:fly={{ y: 100, duration: 1000 }}>
-			<div class="title"><h3>{title}</h3></div>
+
+		<div
+			class="info"
+			transition:fly={{ y: 100, duration: 1000, easing: cubicInOut }}
+		>
+			<div class="title">
+				<h3><a href={link} target="_blank">{title}</a></h3>
+			</div>
 			<div class="description">
 				<p>
 					{description}
@@ -47,8 +62,12 @@
 					{/each}
 				</div>
 				<div class="links">
-					<a href="#"><i class="fab fa-github" /></a>
-					<a href="#"><i class="fas fa-external-link-alt" /></a>
+					{#if github}
+						<a href={github} target="_blank"><i class="fab fa-github" /></a>
+					{/if}
+					<a href={link} target="_blank"
+						><i class="fas fa-external-link-alt" /></a
+					>
 				</div>
 			</div>
 		</div>
@@ -67,6 +86,12 @@
 		width: 60%;
 		/* width: 100%; */
 		position: relative;
+		transition: all ease 0.2s;
+	}
+
+	.project .image:hover {
+		cursor: pointer;
+		transform: scale(1.01);
 	}
 
 	.project .image::after {
@@ -77,8 +102,13 @@
 		top: 0;
 		left: 0;
 		background-color: #05386b;
-		opacity: 0.5;
+		opacity: 0.3;
 		border-radius: 5px;
+		transition: all ease 0.5s;
+	}
+
+	.project .image:hover::after {
+		background-color: transparent;
 	}
 
 	.project .image img {
